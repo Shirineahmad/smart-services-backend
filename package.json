@@ -20,5 +20,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
-  }
+  },
+  "repository": "https://github.com/Shirineahmad/smart-services-backend.git",
+  "author": "Shirineahmad <shirine.ahmad@hotmail.com>"
 }

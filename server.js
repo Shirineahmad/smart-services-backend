@@ -1,22 +1,30 @@
 require("dotenv").config();
-const { initializeApp }= require("firebase/app");
-const { getAnalytics } = require("firebase/analytics");
-// import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-const dbConnection=require("./config/db")
-const {firebaseConfig}=require("./config/firebase")
 const express = require("express");
 const cors = require("cors");
-
+const dbConnection = require("./config/db");
+const userRoutes = require("./routes/userRoutes");
+const countryRoutes = require("./routes/countryRoutes");
+const visaRoutes = require("./routes/visaRoutes");
+const servicesRoutes = require("./routes/servicesRoutes");
+const howToPay = require("./routes/howToPayRoutes");
+const exam = require("./routes/examRoutes");
+const submissionExam = require("./routes/submissionExamRoutes");
+const submissionFlight = require("./routes/submissionFlightRoutes");
 const app = express();
-const initiliatizeFirebase = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded());
 
+app.use("/user", userRoutes);
+app.use("/country", countryRoutes);
+app.use("/services", servicesRoutes);
+app.use("/visa", visaRoutes);
+app.use("/exam", exam);
+app.use("/payment", howToPay);
+app.use("/submissionExam", submissionExam);
+app.use("/submissionFlight", submissionFlight);
 app.listen(PORT, () => {
    dbConnection();
   console.log(`app listening on port ${PORT}`);
