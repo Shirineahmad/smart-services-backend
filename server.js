@@ -10,12 +10,13 @@ const howToPay = require("./routes/howToPayRoutes");
 const exam = require("./routes/examRoutes");
 const submissionExam = require("./routes/submissionExamRoutes");
 const submissionFlight = require("./routes/submissionFlightRoutes");
+const submissionVisa = require("./models/submissionVisaModel");
 const app = express();
 const PORT = process.env.PORT;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", userRoutes);
 app.use("/country", countryRoutes);
@@ -25,6 +26,7 @@ app.use("/exam", exam);
 app.use("/payment", howToPay);
 app.use("/submissionExam", submissionExam);
 app.use("/submissionFlight", submissionFlight);
+app.use("/submissionVisa", submissionVisa);
 app.listen(PORT, () => {
    dbConnection();
   console.log(`app listening on port ${PORT}`);

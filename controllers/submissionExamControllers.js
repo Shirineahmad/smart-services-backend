@@ -146,5 +146,31 @@ const updateById = async (req, res) => {
     });
   }
 };
+const getAll = async (req, res) => {
+  try {
+    const submissionExams = await submissionExam.find().populate("userId").populate("examId");
 
-module.exports = { add, getSubmissionByUser, updateById };
+    console.log(submissionExams.length);
+
+    if (submissionExams.length > 0) {
+      res.status(200).json({
+        success: true,
+        message: `submissionFlights retrieved successfully`,
+        data: submissionExams,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: `No submissionExams `,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Unable to get submissionExams `,
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { add, getSubmissionByUser, updateById, getAll };

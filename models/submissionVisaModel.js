@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
-const SubmissionExamSchema = new Schema(
+const SubmissionVisaSchema = new Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,12 +20,12 @@ const SubmissionExamSchema = new Schema(
     },
     documents: [
       {
-        name: { type: string },
+        name: { type: String },
         files: { type: Array },
       },
     ],
     statusVisa: {
-      type: string,
+      type: String,
       required: true,
       enum: ["pending", "accepted","rejected"],//has more 7
       default: "pending",
@@ -35,6 +35,6 @@ const SubmissionExamSchema = new Schema(
   { timestamps: true }
 );
 
-const submissionExam = model("submissionExam", SubmissionExamSchema);
+const submissionVisa = model("submissionVisa", SubmissionVisaSchema);
 
-module.exports = submissionExam;
+module.exports = submissionVisa;

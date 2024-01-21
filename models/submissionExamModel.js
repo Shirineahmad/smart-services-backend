@@ -19,7 +19,7 @@ const SubmissionExamSchema = new Schema(
     statusExam: {
       type: String,
       required: true,
-      enum: ["pending", "accepted"],
+      enum: ["pending", "request","accepted"],
       default: "pending",
     },
     additionalComment: { type: String },
