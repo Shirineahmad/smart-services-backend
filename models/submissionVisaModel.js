@@ -14,22 +14,49 @@ const SubmissionVisaSchema = new Schema(
       required: true,
     },
     person: {
-      child: { type: Number },
-      adult: { type: Number },
-      infant: { type: Number },
+      Child: {
+        type: Number,
+        validate: {
+          validator: function (value) {
+            return value >= 0; // Check if child is non-negative
+          },
+          message: "Child must be a non-negative number.",
+        },
+      },
+      Adult: {
+        type: Number,
+        validate: {
+          validator: function (value) {
+            return value >= 0; // Check if adult is non-negative
+          },
+          message: "Adult must be a non-negative number.",
+        },
+      },
+      Infant: {
+        type: Number,
+        validate: {
+          validator: function (value) {
+            return value >= 0; // Check if infant is non-negative
+          },
+          message: "Infant must be a non-negative number.",
+        },
+      },
     },
+
     documents: [
       {
         name: { type: String },
-        files: { type: Array },
+        file: { type: String },
       },
     ],
+
+    //  documents: { type: Array, required: true },
     statusVisa: {
       type: String,
       required: true,
-      enum: ["pending", "accepted","rejected"],//has more 7
+      enum: ["pending", "accepted", "rejected"], //has more 7
       default: "pending",
-    }, 
+    },
   },
 
   { timestamps: true }

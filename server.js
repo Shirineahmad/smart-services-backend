@@ -10,7 +10,7 @@ const howToPay = require("./routes/howToPayRoutes");
 const exam = require("./routes/examRoutes");
 const submissionExam = require("./routes/submissionExamRoutes");
 const submissionFlight = require("./routes/submissionFlightRoutes");
-const submissionVisa = require("./models/submissionVisaModel");
+const submissionVisa = require("./routes/submissionVisaRoutes");
 const app = express();
 const PORT = process.env.PORT;
 

@@ -58,15 +58,17 @@ const add = async (req, res) => {
       additionalComment,
       passport: uploadedFiles,
     });
-
-    await newSubmissionFlight.save();
-
+    
+    await newSubmissionFlight.save(); 
+    console.log("response", response)
+    console.log("res",res)
     res.status(200).json({
       success: true,
       message: `SubmissionFlight data added successfully`,
       data: newSubmissionFlight,
     });
   } catch (error) {
+    
     res.status(500).json({
       success: false,
       message: "Unable to add SubmissionFlight",

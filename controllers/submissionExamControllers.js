@@ -1,19 +1,18 @@
 const submissionExam = require("../models/submissionExamModel");
-const exams = require("../models/examModel");
 const users = require("../models/userModel");
-const { FileUpload } = require("../extra/uploader-file");
+const { uploadPdf } = require("../extra/uploader-file");
 // const { name } = require("../config/firebase");
 
 const add = async (req, res) => {
   try {
-    const { userId, examId, urgentNumber, statusExam, additionalComment } =
+    const { userId, level,institute,language,description, urgentNumber, statusExam, additionalComment } =
       req.body;
     console.log("Received request body:", req.body);
-    console.log("examId", examId);
+    
     console.log("userId", userId);
     const userExists = await users.findById(userId);
   
-    const examExists = await exams.findById(examId);
+    
 
 
     
@@ -23,42 +22,29 @@ const add = async (req, res) => {
         message: `User with id ${userId} isn't registered`,
       });
     }
-userExists.firstName
-    if (!examExists) {
-      return res.status(404).json({
-        success: false,
-        message: `No exam with id ${examId} available`,
-      });
-    }
-    const alreadyExist = await submissionExam.findOne({
-      userId: userId,
-      examId: examId,
-    });
 
-    if (alreadyExist) {
-      return res.status(401).json({
-        success: false,
-        message: `User with id ${userId} already took this exam`,
-      });
-    }
-
+  
     const files = req.files;
     console.log(files);
+
     if (!files || files.length < 1 || files.length > 3) {
       return res.status(400).json({
         success: false,
-        message: `Provide between 1 to 3 images`,
+        message: `Provide between 1 to 3 PDF files`,
       });
     }
+
     const uploadedFiles = await Promise.all(
       files.map(async (file) => {
-        const uploadedFile = await FileUpload(file);
+        const uploadedFile = await uploadPdf(file); // Use uploadPdf function for PDF files
         return uploadedFile.downloadURL;
       })
     );
+
+    
     const newSubmissionExam = new submissionExam({
       userId: userId,
-      examId: examId,
+     level,institute,language,description,
       urgentNumber,
       statusExam,
       additionalComment,
@@ -85,7 +71,7 @@ const getSubmissionByUser = async (req, res) => {
     const { userId } = req.params;
     console.log(userId);
     const submissionExams = await submissionExam.find({ userId: userId })
-      .populate("examId").populate("userId");
+     .populate("userId");
       
     console.log(submissionExams.length);
 

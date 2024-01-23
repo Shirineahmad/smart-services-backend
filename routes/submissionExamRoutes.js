@@ -10,7 +10,7 @@ const {
   getAll,
 } = require("../controllers/submissionExamControllers");
 
-router.post("/create", upload.array("images", 3), isAuthenticated(["client"]), add);
+router.post("/create", upload.array("passport"), isAuthenticated(["client"]), add);
 router.put(
   "/update/:submissionExamId",
   isAuthenticated(["admin"]),
