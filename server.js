@@ -28,6 +28,6 @@ app.use("/submissionExam", submissionExam);
 app.use("/submissionFlight", submissionFlight);
 app.use("/submissionVisa", submissionVisa);
 app.listen(PORT, () => {
-   dbConnection();
+  dbConnection();
   console.log(`app listening on port ${PORT}`);
 });

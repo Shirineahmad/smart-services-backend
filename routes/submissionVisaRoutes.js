@@ -16,7 +16,7 @@ const {
 
 router.post(
   "/create",
-  upload.array("documents"),
+ 
   isAuthenticated(["client"]),
   add
 );

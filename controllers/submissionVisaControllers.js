@@ -2,9 +2,8 @@ const { uploadPdf } = require("../extra/uploader-file");
 const submissionVisa = require("../models/submissionVisaModel");
 const users = require("../models/userModel");
 const add = async (req, res) => {
-  console.log("Received request body:", req.body);
   try {
-    const { userId, visaId, person, statusVisa } = req.body;
+    const { userId, visaId, person, statusVisa, documents } = req.body;
 
     console.log("Received request body:", req.body);
 
@@ -17,19 +16,37 @@ const add = async (req, res) => {
       });
     }
     const singleFile = req.file;
-    console.log(file);
-    if (!file) {
+    console.log(singleFile);
+    if (!singleFile) {
       return res.status(400).json({
         success: false,
-        message: `Provide between 1 to 3 images`,
+        message: `Provide1`,
       });
     }
+    const ob = {};
+    const result = documents.map(async (doc) => {
+      const uploadedFile = await uploadPdf(doc.file);
+      const downloadURL = uploadedFile.downloadURL;
 
-    const uploadedFile = await FileUpload(singleFile);
-    const downloadURL = uploadedFile.downloadURL;
-    const name = uploadedFile.originalname;
+      // Update the ob object for each document
+      ob[doc.name] = {
+        name: doc.name,
+        downloadURL: downloadURL,
+      };
 
-    if (!file) {
+      return ob[doc.name]; // You can choose to return the updated object if needed
+    });
+
+    // Wait for all promises to resolve
+    await Promise.all(result);
+
+    console.log(ob);
+
+    // const uploadedFile = await uploadPdf(singleFile);
+    // const downloadURL = uploadedFile.downloadURL;
+    // const name = uploadedFile.originalname;
+
+    if (!singleFile) {
       return res.status(400).json({
         success: false,
         message: `Provide between 1 to 3 PDF files`,
@@ -49,7 +66,7 @@ const add = async (req, res) => {
       visaId,
       person: JSON.parse(person),
       statusVisa,
-      documents: {name,downloadURL},
+      documents: ob,
     });
 
     await newSubmissionVisa.save();

@@ -27,7 +27,7 @@ const add = async (req, res) => {
     const files = req.files;
     console.log(files);
 
-    if (!files || files.length < 1 || files.length > 3) {
+    if (!files || files.length < 1 ) {
       return res.status(400).json({
         success: false,
         message: `Provide between 1 to 3 PDF files`,
@@ -134,7 +134,7 @@ const updateById = async (req, res) => {
 };
 const getAll = async (req, res) => {
   try {
-    const submissionExams = await submissionExam.find().populate("userId").populate("examId");
+    const submissionExams = await submissionExam.find().populate("userId")
 
     console.log(submissionExams.length);
 
