@@ -10,7 +10,7 @@ const storage = getStorage();
 
 const uploadPdf = async (pdfFile) => {
   try {
-    const dateTime = giveCurrentDateTime();
+    const dateTime = getCurrentDateTime();
     const storageRef = ref(
       storage,
       `pdfs/${pdfFile.originalname}_${dateTime}.pdf`
@@ -19,6 +19,7 @@ const uploadPdf = async (pdfFile) => {
     // Create file metadata including the content type
     const metadata = {
       contentType: pdfFile.mimetype,
+      // Add more metadata properties if needed
     };
 
     // Upload the PDF file to the storage bucket
@@ -45,7 +46,7 @@ const uploadPdf = async (pdfFile) => {
   }
 };
 
-const giveCurrentDateTime = () => {
+const getCurrentDateTime = () => {
   const today = new Date();
   const date =
     today.getFullYear() +

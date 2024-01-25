@@ -46,11 +46,10 @@ const SubmissionVisaSchema = new Schema(
     documents: [
       {
         name: { type: String },
-        file: { type: String },
+        file: { type: Array },
       },
     ],
 
-    //  documents: { type: Array, required: true },
     statusVisa: {
       type: String,
       required: true,

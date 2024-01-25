@@ -12,7 +12,9 @@ const add = async (req, res) => {
       leavingDate,
       arrivingDate,
       classFlight,
-      person,
+      "person.Child": child,
+      "person.Adult": adult,
+      "person.Infant": infant,
       statusFlight,
       additionalComment,
     } = req.body;
@@ -53,22 +55,24 @@ const add = async (req, res) => {
       leavingDate,
       arrivingDate,
       classFlight,
-      person: JSON.parse(person),
+      person: {
+        Adult: adult,
+        Child: child,
+        Infant: infant,
+      },
       statusFlight,
       additionalComment,
       passport: uploadedFiles,
     });
-    
-    await newSubmissionFlight.save(); 
-    console.log("response", response)
-    console.log("res",res)
+
+    await newSubmissionFlight.save();
+   
     res.status(200).json({
       success: true,
       message: `SubmissionFlight data added successfully`,
       data: newSubmissionFlight,
     });
   } catch (error) {
-    
     res.status(500).json({
       success: false,
       message: "Unable to add SubmissionFlight",

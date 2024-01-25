@@ -36,7 +36,7 @@ const SubmissionFlightSchema = new Schema(
           message: "Child must be a non-negative number.",
         },
       },
-        Adult: {
+      Adult: {
         type: Number,
         validate: {
           validator: function (value) {
@@ -45,7 +45,7 @@ const SubmissionFlightSchema = new Schema(
           message: "Adult must be a non-negative number.",
         },
       },
-    Infant: {
+      Infant: {
         type: Number,
         validate: {
           validator: function (value) {

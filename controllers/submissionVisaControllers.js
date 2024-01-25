@@ -1,85 +1,64 @@
 const { uploadPdf } = require("../extra/uploader-file");
 const submissionVisa = require("../models/submissionVisaModel");
 const users = require("../models/userModel");
+
 const add = async (req, res) => {
+  const {
+    userId,
+    visaId,
+    statusVisa,
+    "person.Child": child,
+    "person.Adult": adult,
+    "person.Infant": infant,
+  } = req.body;
+
+  console.log("Received request body:", req.body);
+
+  const userExists = await users.findById(userId);
+
+  if (!userExists) {
+    return res.status(404).json({
+      success: false,
+      message: `User with id ${userId} isn't registered`,
+    });
+  }
+  const files = req.files;
+  console.log(files);
+
+  if (!files) {
+    return res.status(400).json({
+      success: false,
+      message: `Provide between `,
+    });
+  }
+  const uploadedFiles = await Promise.all(
+    files.map(async (file) => {
+      const uploadedFile = await uploadPdf(file); // Use uploadPdf function for PDF files
+      return { file: uploadedFile.downloadURL, name: uploadedFile.name };
+    })
+  );
+  const newSubmissionVisa = new submissionVisa({
+    userId,
+    visaId,
+    person: {
+      Adult: adult,
+      Child: child,
+      Infant: infant,
+    },
+    statusVisa,
+    documents: uploadedFiles,
+  });
+
   try {
-    const { userId, visaId, person, statusVisa, documents } = req.body;
-
-    console.log("Received request body:", req.body);
-
-    const userExists = await users.findById(userId);
-
-    if (!userExists) {
-      return res.status(404).json({
-        success: false,
-        message: `User with id ${userId} isn't registered`,
-      });
-    }
-    const singleFile = req.file;
-    console.log(singleFile);
-    if (!singleFile) {
-      return res.status(400).json({
-        success: false,
-        message: `Provide1`,
-      });
-    }
-    const ob = {};
-    const result = documents.map(async (doc) => {
-      const uploadedFile = await uploadPdf(doc.file);
-      const downloadURL = uploadedFile.downloadURL;
-
-      // Update the ob object for each document
-      ob[doc.name] = {
-        name: doc.name,
-        downloadURL: downloadURL,
-      };
-
-      return ob[doc.name]; // You can choose to return the updated object if needed
-    });
-
-    // Wait for all promises to resolve
-    await Promise.all(result);
-
-    console.log(ob);
-
-    // const uploadedFile = await uploadPdf(singleFile);
-    // const downloadURL = uploadedFile.downloadURL;
-    // const name = uploadedFile.originalname;
-
-    if (!singleFile) {
-      return res.status(400).json({
-        success: false,
-        message: `Provide between 1 to 3 PDF files`,
-      });
-    }
-    // const pdfFiles = await Promise.all([
-    //   (async () => {
-    //     const uploadedFile = await uploadPdf(file);
-    //     const name = uploadedFile.originalname;
-    //     const downloadURL = uploadedFile.downloadURL;
-    //     return { name, downloadURL };
-    //   })(),
-    // ]);
-
-    const newSubmissionVisa = new submissionVisa({
-      userId: userId,
-      visaId,
-      person: JSON.parse(person),
-      statusVisa,
-      documents: ob,
-    });
-
     await newSubmissionVisa.save();
-    console.log("response", await newSubmissionVisa.save());
-    console.log("newSubmissionVisa", newSubmissionVisa);
-
-    console.log("res", res);
+    console.log("SubmissionVisa saved successfully:", newSubmissionVisa);
     res.status(200).json({
       success: true,
-      message: `submissionVisa data added successfully`,
+      message: "SubmissionVisa data added successfully",
       data: newSubmissionVisa,
     });
   } catch (error) {
+    console.error("Error saving SubmissionVisa to the database:", error);
     res.status(500).json({
       success: false,
       message: "Unable to add SubmissionVisa",
@@ -101,7 +80,7 @@ const getSubmissionByUser = async (req, res) => {
     if (submissionVisas.length > 0) {
       res.status(200).json({
         success: true,
-        message: `submissionVisas for user with ID ${userId} retrieved successfully`,
+        message: `submissionVisas for user with ID ${submissionVisas.userId} retrieved successfully`,
         data: submissionVisas,
       });
     } else {
@@ -159,7 +138,10 @@ const updateById = async (req, res) => {
 };
 const getAll = async (req, res) => {
   try {
-    const submissionVisas = await submissionVisa.find().populate("userId");
+    const submissionVisas = await submissionVisa
+      .find()
+      .populate("userId")
+      .populate("visaId");
 
     console.log(submissionVisas.length);
 
