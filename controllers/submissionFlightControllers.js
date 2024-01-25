@@ -12,9 +12,7 @@ const add = async (req, res) => {
       leavingDate,
       arrivingDate,
       classFlight,
-      "person.Child": child,
-      "person.Adult": adult,
-      "person.Infant": infant,
+      person: { Adult: adult, Child: child, Infant: infant },
       statusFlight,
       additionalComment,
     } = req.body;
@@ -56,9 +54,9 @@ const add = async (req, res) => {
       arrivingDate,
       classFlight,
       person: {
-        Adult: adult,
-        Child: child,
-        Infant: infant,
+        Adult: parseInt(adult, 10),
+        Child: parseInt(child, 10),
+        Infant: parseInt(infant, 10),
       },
       statusFlight,
       additionalComment,

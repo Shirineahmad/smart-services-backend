@@ -7,9 +7,7 @@ const add = async (req, res) => {
     userId,
     visaId,
     statusVisa,
-    "person.Child": child,
-    "person.Adult": adult,
-    "person.Infant": infant,
+    person: { Adult: adult, Child: child, Infant: infant },
   } = req.body;
 
   console.log("Received request body:", req.body);
@@ -41,9 +39,9 @@ const add = async (req, res) => {
     userId,
     visaId,
     person: {
-      Adult: adult,
-      Child: child,
-      Infant: infant,
+      Adult: parseInt(adult, 10),
+      Child: parseInt(child, 10),
+      Infant: parseInt(infant, 10),
     },
     statusVisa,
     documents: uploadedFiles,
